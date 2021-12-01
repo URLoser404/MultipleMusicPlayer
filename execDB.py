@@ -3,19 +3,22 @@ from sqlite3 import *
 conn = connect('music.db')
 cursor = conn.cursor()
 
-conn.execute("Drop table playlist")
-conn.commit()
 
-conn.execute('''Create table if not exists playlist
-                    (id integer primary key not null,
-                    songName text not null,
-                    url text not null,
-                    type text not null)''')
-conn.commit()
 
-for i in range(20):
-    conn.execute(f"insert into playlist values({i},'{i+1}','{i+2}','{i+3}')")
-conn.commit()
+def main():
+    conn.execute("Drop table playlist")
+    conn.commit()
+
+    conn.execute('''Create table if not exists playlist
+                        (id integer primary key not null,
+                        songName text not null,
+                        url text not null,
+                        type text not null)''')
+    conn.commit()
+
+    for i in range(20):
+        conn.execute(f"insert into playlist values({i},'{i+1}','{i+2}','{i+3}')")
+    conn.commit()
 
 
 def exec(command):
@@ -30,9 +33,8 @@ def exec(command):
     return cursor.fetchall()
 
 
-
-
-
+if __name__ == "__main__":
+    main()
 
 
 
