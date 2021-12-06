@@ -1,36 +1,33 @@
-import pafy
+# import pafy
+# import vlc
 
-import vlc
+# url = "https://www.youtube.com/watch?v=YDxIPzijqr8"
+# video = pafy.new(url)
+# print(video)
+# best = video.getbest()
+# playurl = best.url
 
-url = "https://www.youtube.com/watch?v=YDxIPzijqr8"
-video = pafy.new(url)
-best = video.getbest()
-playurl = best.url
-Instance = vlc.Instance()
-player = Instance.media_player_new()
-Media = Instance.media_new(playurl)
-Media.get_mrl()
-player.set_media(Media)
-player.play()
+# # print(playurl)
 
-# import re, requests, subprocess, urllib.parse, urllib.request
-# from bs4 import BeautifulSoup
+# Instance = vlc.Instance()
+# player = Instance.media_player_new()
+# Media = Instance.media_new(playurl)
+# Media.get_mrl()
+# player.set_media(Media)
+# player.play()
 
-# music_name = "我站在雲林"
-# query_string = urllib.parse.urlencode({"search_query": music_name})
-# formatUrl = urllib.request.urlopen("https://www.youtube.com/results?" + query_string)
+def search(search):
+    import re, requests, subprocess, urllib.parse, urllib.request
+    from bs4 import BeautifulSoup
 
-# search_results = re.findall(r"watch\?v=(\S{11})", formatUrl.read().decode())
-# clip = requests.get("https://www.youtube.com/watch?v=" + "{}".format(search_results[0]))
-# clip2 = "https://www.youtube.com/watch?v=" + "{}".format(search_results[0])
+    query_string = urllib.parse.urlencode({"search_query": search})
+    formatUrl = urllib.request.urlopen("https://www.youtube.com/results?" + query_string)
 
-# inspect = BeautifulSoup(clip.content, "html.parser")
-# yt_title = inspect.find_all("meta", property="og:title")
+    search_results = re.findall(r"watch\?v=(\S{11})", formatUrl.read().decode())
+    return "https://www.youtube.com/watch?v=" + "{}".format(search_results[0])
 
-# for concatMusic1 in yt_title:
-#     pass
+search("我站在雲林")
 
-# print(concatMusic1['content'])
 
 # subprocess.Popen(
 # "start /b " + "path\\to\\mpv.exe " + clip2 + " --no-video --loop=inf --input-ipc-server=\\\\.\\pipe\\mpv-pipe > output.txt",
