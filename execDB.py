@@ -9,8 +9,8 @@ def main():
     conn.execute("Drop table playlist")
     conn.commit()
 
-    conn.execute('''Create table if not exists playlist
-                        (id integer primary key not null,
+    conn.execute('''Create table if not exists playlist(
+                        id integer primary key not null,
                         songName text not null,
                         url text not null,
                         type text not null)''')
