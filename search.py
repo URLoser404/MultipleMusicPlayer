@@ -1,38 +1,25 @@
-# import vlc
-
-# # print(playurl)
-
-# Instance = vlc.Instance()
-# player = Instance.media_player_new()
-# Media = Instance.media_new(playurl)
-
-# Media.get_mrl()
-# player.set_media(Media)
-# player.play()
-class music:
-    def __init__(self,video,url,playurl):
-        self.title = video.Title
-        self.author = video.Author
-        self.yt_code = video.ID
-        self.duration = video.Duration
-        self.rating = video.Rating
-        self.views = video.Views
-        self.thumbnail = video.Thumbnail
-        self.url = url
-        self.playurl = playurl
-
-
-
 def url_search(url):
+    
     import pafy
     video = pafy.new(url)
-    best = video.getbest()
-    playurl = best.url
+    best = video.getbestaudio()
 
     return best
 
+def play(url):
+
+    import vlc
+
+    Instance = vlc.Instance()
+    player = Instance.media_player_new()
+    Media = Instance.media_new(url)
+    Media.get_mrl()
+    player.set_media(Media)
+    player.play()
+
 
 def string_search(search):
+
     import re, requests, subprocess, urllib.parse, urllib.request
     from bs4 import BeautifulSoup
 
@@ -46,7 +33,9 @@ def string_search(search):
 
     
 if __name__ == "__main__":
-    print(vars(string_search("殺死那個石家莊人")))
+    video = string_search("殺死那個石家莊人")
+    play(video.url)
+    print(vars(video))
 
 
 
