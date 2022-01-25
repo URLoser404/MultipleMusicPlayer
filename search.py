@@ -20,10 +20,9 @@ def string_search(search):
     return url_search(url)
 
 
-def play(video):
+def play(url):
 
-    url = video.getbestaudio().url
-
+    
     import vlc
 
     Instance = vlc.Instance()
@@ -36,7 +35,7 @@ def play(video):
 
 if __name__ == "__main__":
     video = string_search('pocats studio')
-    play(video)
+    play(video.getbestaudio().url)
 
     while True:
         pass

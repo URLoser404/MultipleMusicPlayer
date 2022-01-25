@@ -6,26 +6,21 @@ cursor = conn.cursor()
 
 
 def main():
-    # conn.execute("Drop table playlist")
+    conn.execute("drop table playlist")
     conn.commit()
 
     conn.execute('''Create table if not exists playlist(
-                        id integer primary key not null AUTOINCREMENT,
+                        id integer primary key AUTOINCREMENT not null,
                         title text not null,
                         author text not null,
                         duration text not null,
                         url text not null,
-                        thumnail text not null,
-                        played bool not null
+                        img text not null,
+                        played boolean not null
                     )''')
     conn.commit()
 
 
-    conn.execute('''insert into playlist values(
-                    'toxic',
-                    's music',
-
-                    ''')
 
 
 
@@ -42,6 +37,7 @@ def exec(command):
 
 
 if __name__ == "__main__":
+    # print(exec("select * from playlist"))
     main()
 
 
