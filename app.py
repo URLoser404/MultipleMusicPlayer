@@ -47,6 +47,16 @@ def addSong():
         'img' : video.thumb,
         'description' :video._ydl_info.get('description')
     }
+
+@app.route('/play',methods=['POST','GET'])
+def play():
+    id = request.args.get('id')
+    conn = connect('music.db')
+    conn.execute(f"update playlist set played = 1 where id <  {id}")
+    conn.execute(f"update playlist set played = 0 where id >= {id}")
+    conn.commit()
+    player.stop()
+    return redirect('/now')
     
 @app.route('/playlist', methods=['POST','GET'])
 def playlist():
@@ -78,36 +88,32 @@ def pause():
 
 @app.route('/now', methods=['POST','GET'])
 def now():
-    current['position'] = (player.get_time() / 1000 ) 
+    current['time'] = (player.get_time() / 1000) 
     current['volume'] = player.audio_get_volume() 
+    current['rate'] = player.get_rate()
     return current
-
 @app.route('/next',methods=['POST','GET'])
 def next():
     player.stop()
-    return {
-        'status' : status
-    }
+    return redirect('/now')
 @app.route('/previous', methods=['POST','GET'])
 def previous():
     conn = connect('music.db')
-    conn.execute(f"update playlist set played = 0 where id = {current['id']};")
-    conn.execute(f"update playlist set played = 0 where id = {current['id']-1};")
+    conn.execute(f"update playlist set played = 0 where id = {current['id']}")
+    conn.execute(f"update playlist set played = 0 where id = {current['id']-1}")
     conn.commit()
     player.stop()
-
-    return {
-        'status' : status
-    }
-
+    return redirect('/now')
 @app.route('/volume' , methods=['POST','GET'])
 def volume():
     volume = request.args.get("volume")
-
     player.audio_set_volume(int(volume))
-    return {
-        'status' : status
-    } 
+    return redirect('/now')
+@app.route('/rate' , methods=['POST','GET'])
+def rate():
+    rate = request.args.get("rate")
+    player.set_rate(float(rate))
+    return redirect('/now')
 
 def run():
     app.run(host='0.0.0.0', port=8080)
