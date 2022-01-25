@@ -16,6 +16,9 @@ pip install python-vlc
 pip install sqlite3
 ```
 
+- download vlc
+https://www.it145.com/9/131074.html
+
 
 Linux
 ```
