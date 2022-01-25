@@ -2,20 +2,8 @@ def url_search(url):
     
     import pafy
     video = pafy.new(url)
-    best = video.getbestaudio()
 
-    return best
-
-def play(url):
-
-    import vlc
-
-    Instance = vlc.Instance()
-    player = Instance.media_player_new()
-    Media = Instance.media_new(url)
-    Media.get_mrl()
-    player.set_media(Media)
-    player.play()
+    return video
 
 
 def string_search(search):
@@ -31,13 +19,27 @@ def string_search(search):
 
     return url_search(url)
 
-    
-if __name__ == "__main__":
-    video = url_search("https://www.youtube.com/watch?v=Ym9-KqWB7OM&list=RDYm9-KqWB7OM&start_radio=1")
-    import pprint
-    pprint.pprint(vars(video))
-    play(video.url)
 
+def play(video):
+
+    url = video.getbestaudio().url
+
+    import vlc
+
+    Instance = vlc.Instance()
+    player = Instance.media_player_new()
+    Media = Instance.media_new(url)
+    Media.get_mrl()
+    player.set_media(Media)
+    player.play()
+
+
+if __name__ == "__main__":
+    video = string_search('pocats studio')
+    play(video)
+
+    while True:
+        pass
 
 
 
