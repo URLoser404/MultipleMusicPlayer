@@ -14,6 +14,7 @@ pip install pafy
 pip install youtube-dl
 pip install python-vlc
 pip install sqlite3
+pip install flask
 ```
 
 - download vlc

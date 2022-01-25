@@ -34,12 +34,13 @@ def string_search(search):
     
 if __name__ == "__main__":
     video = string_search("殺死那個石家莊人")
+    import pprint
+    pprint.pprint(vars(video))
     play(video.url)
 
     
 
-    import pprint
-    pprint.pprint(vars(video))
+    
     while True:
         pass
 
