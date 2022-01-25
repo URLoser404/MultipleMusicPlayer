@@ -33,7 +33,7 @@ def string_search(search):
 
     
 if __name__ == "__main__":
-    video = string_search("殺死那個石家莊人")
+    video = url_search("https://www.youtube.com/watch?v=Ym9-KqWB7OM&list=RDYm9-KqWB7OM&start_radio=1")
     import pprint
     pprint.pprint(vars(video))
     play(video.url)
