@@ -4,13 +4,9 @@ from threading import Thread
 
 from sqlite3 import *
 
-from itsdangerous import serializer
-
 import search
 
 current = None
-flag = True
-
 
 import vlc
 
@@ -24,7 +20,6 @@ CORS(app)
 
 @app.route('/addSong' , methods=['POST','GET'])
 def addSong():
-
     string = request.args.get('string')
 
     if string.startswith("https://www.youtube.com") :
@@ -34,15 +29,7 @@ def addSong():
 
 
     conn = connect('music.db')
-    def dict_factory(cursor, row):
-            dict = {}
-            for idx, col in enumerate(cursor.description):
-                dict[col[0]] = row[idx]
-            return dict
-    conn.row_factory = dict_factory
-    cursor = conn.cursor()
-        
-    cursor.execute(f'''insert into playlist(title,author,duration,url,img,played) values(
+    conn.execute(f'''insert into playlist(title,author,duration,url,img,played) values(
                     '{video.title}',
                     '{video.author}',
                     '{video.duration}',
@@ -58,7 +45,7 @@ def addSong():
         'duration' : video.duration,
         'url' : video.watchv_url,
         'img' : video.thumb,
-        'description' :video._ydl_info.get("description")
+        'description' :video._ydl_info.get('description')
     }
     
 @app.route('/playlist', methods=['POST','GET'])
@@ -71,7 +58,7 @@ def playlist():
         return dict
     conn.row_factory = dict_factory
     cursor = conn.cursor()
-    cursor.execute("select * from playlist")
+    cursor.execute('select * from playlist')
     return jsonify(cursor.fetchall())
 
 
@@ -86,56 +73,49 @@ def pause():
         status = True
         player.play()
     return {
-        "status" : status
+        'status' : status
     }
 
 @app.route('/now', methods=['POST','GET'])
 def now():
-    current["position"] = player.get_position() 
+    current['position'] = (player.get_time() / 1000 ) 
+    current['volume'] = player.audio_get_volume() 
     return current
 
 @app.route('/next',methods=['POST','GET'])
 def next():
     player.stop()
     return {
-        status : status
+        'status' : status
     }
 @app.route('/previous', methods=['POST','GET'])
 def previous():
     conn = connect('music.db')
     conn.execute(f"update playlist set played = 0 where id = {current['id']};")
-    
-    def dict_factory(cursor, row):
-        dict = {}
-        for idx, col in enumerate(cursor.description):
-            dict[col[0]] = row[idx]
-        return dict
-    conn.row_factory = dict_factory
-    cursor = conn.cursor()
-    cursor.execute("select * from playlist where played = 1")
-    
-    last = cursor.fetchall()[-1]
-    id = last["id"]
-    conn.execute(f"update playlist set played = 0 where id = {id};")
-
+    conn.execute(f"update playlist set played = 0 where id = {current['id']-1};")
     conn.commit()
     player.stop()
-    import time
-    time.sleep(1.5)
-    player.play()
 
-    
-    return last
+    return {
+        'status' : status
+    }
 
+@app.route('/volume' , methods=['POST','GET'])
+def volume():
+    volume = request.args.get("volume")
 
+    player.audio_set_volume(int(volume))
+    return {
+        'status' : status
+    } 
 
 def run():
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host='0.0.0.0', port=8080)
 
 
 server = Thread(target=run)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     
     server.start()
     while True:
@@ -162,35 +142,13 @@ if __name__ == "__main__":
             player.set_media(Media)
             player.play()
 
-            conn.execute(f"update playlist set played = 1 where id = {current['id']};")
+            conn.execute(f"update playlist set played = 1 where id = {current['id']}")
             conn.commit()
 
             current_state = player.get_state()
-            while current_state != 5 or current_state != 6:
-                current_state = player.get_state()
-
-            
-            
+            while current_state != 5 and current_state != 6:
+                current_state = player.get_state() 
         else:
             print("no song")
             import time
             time.sleep(1)
-    
-    
-
-    
-    
-
-    
-    
-
-
-    
-
-        
-
-        
-
-        
-
-

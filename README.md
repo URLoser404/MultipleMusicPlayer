@@ -29,10 +29,3 @@ Windows
 ```
 ./setup.bat
 ```
-
-## TODO
-
-- [ ] web UI
-- [ ] Database builting
-- [ ] flask server built
-- [ ] music play

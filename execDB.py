@@ -37,13 +37,6 @@ def exec(command):
 
 
 if __name__ == "__main__":
-    # print(exec("select * from playlist"))
+    print(exec("select * from playlist"))
     main()
 
-
-
-
-# cursor = conn.execute("select * from playlist")
-
-# for row in cursor:
-#     print(row)
