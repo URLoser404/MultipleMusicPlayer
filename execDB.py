@@ -13,12 +13,9 @@ def main():
                         id integer primary key not null,
                         songName text not null,
                         url text not null,
-                        type text not null)''')
+                        )''')
     conn.commit()
 
-    for i in range(20):
-        conn.execute(f"insert into playlist values({i},'{i+1}','{i+2}','{i+3}')")
-    conn.commit()
 
 
 def exec(command):
