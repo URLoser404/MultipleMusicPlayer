@@ -38,11 +38,7 @@ if __name__ == "__main__":
     pprint.pprint(vars(video))
     play(video.url)
 
-    
 
-    
-    while True:
-        pass
 
 
 
