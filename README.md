@@ -15,10 +15,13 @@ pip install youtube-dl
 pip install python-vlc
 pip install sqlite3
 pip install flask
+pip install flask-cors
 ```
 
 - download vlc
-https://www.it145.com/9/131074.html
+https://www.videolan.org/
+- download python 3.9.9
+https://www.python.org/downloads/release/python-399/
 
 
 Linux
