@@ -16,6 +16,7 @@ def main():
                         duration text not null,
                         url text not null,
                         img text not null,
+                        music text not null,
                         played boolean not null
                     )''')
     conn.commit()

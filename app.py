@@ -29,13 +29,14 @@ def addSong():
 
 
     conn = connect('music.db')
-    conn.execute(f'''insert into playlist(title,author,duration,url,img,played) values(
+    conn.execute(f'''insert into playlist(title,author,duration,url,img,music,played) values(
                     '{video.title}',
                     '{video.author}',
                     '{video.duration}',
                     '{video.watchv_url}',
                     '{video.thumb}',
-                    0
+                    '{video.getbestaudio().url}',
+                    False
                 )''')
     conn.commit()
 
@@ -52,8 +53,8 @@ def addSong():
 def play():
     id = request.args.get('id')
     conn = connect('music.db')
-    conn.execute(f"update playlist set played = 1 where id <  {id}")
-    conn.execute(f"update playlist set played = 0 where id >= {id}")
+    conn.execute(f"update playlist set played = True where id <  {id}")
+    conn.execute(f"update playlist set played = False where id >= {id}")
     conn.commit()
     player.stop()
     return redirect('/now')
@@ -91,6 +92,7 @@ def now():
     current['time'] = (player.get_time() / 1000) 
     current['volume'] = player.audio_get_volume() 
     current['rate'] = player.get_rate()
+    current['status'] = status
     return current
 @app.route('/next',methods=['POST','GET'])
 def next():
@@ -99,8 +101,7 @@ def next():
 @app.route('/previous', methods=['POST','GET'])
 def previous():
     conn = connect('music.db')
-    conn.execute(f"update playlist set played = 0 where id = {current['id']}")
-    conn.execute(f"update playlist set played = 0 where id = {current['id']-1}")
+    conn.execute(f"update playlist set played = False where id >= {current['id']-1}")
     conn.commit()
     player.stop()
     return redirect('/now')
@@ -134,21 +135,20 @@ if __name__ == '__main__':
             return dict
         conn.row_factory = dict_factory
         cursor = conn.cursor()
-        cursor.execute("select * from playlist where played = 0")
+        cursor.execute("select * from playlist where played = False")
 
 
         playlist = cursor.fetchall()
         if len(playlist) != 0:
             current = playlist[0]
             print(current)
-            video = search.url_search(current['url'])
             
-            Media = Instance.media_new(video.getbestaudio().url)
+            Media = Instance.media_new(current['music'])
             Media.get_mrl()
             player.set_media(Media)
             player.play()
 
-            conn.execute(f"update playlist set played = 1 where id = {current['id']}")
+            conn.execute(f"update playlist set played = True where id = {current['id']}")
             conn.commit()
 
             current_state = player.get_state()
