@@ -4,13 +4,275 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <title>MultipleMusicPlayer</title>
 </head>
 <body>
-    <form action="/addSong" method="POST">
-        <input type="text" name="test">
-        <button> 幹</button>
-    </form>
-    <p>{{test}}</p>
+    <header>
+        <nav>
+            <div class="title">
+                <p>鬼之點歌機</p>
+            </div>
+            <div class="search-div">
+                <p>搜尋歌曲:</p>
+                <div class="search">
+                    <input type="text" id="addSong" name="addSong">
+                    <button id="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            <div class="search-result">
+                <!-- <p>搜尋結果</p>
+                <div class="song-result">
+                    <div class="image">
+                        <img src="http://i.ytimg.com/vi/8DVUlVUwhIw/default.jpg" alt="">
+                    </div>
+                    <div class="information">
+                        <div class="name-author">
+                            <h2>Feel The Fire (Egzod Remix) - ye. & Pluto ♪ || 2021抖音合集 | 抖音BGM | Douyin Music | 抖音 | TikTok</h2>
+                            
+                        </div>
+                        <p class="introduce">Artist: ヒグチアイVocal:ヒグチアイ這首真的滿滿的惆悵感什麼叫做真結局</p>
+                        <p>
+                            <strong>Author:</strong>
+                            Kain Sound
+                        </p>
+                        <p>
+                            <strong>Duration:</strong>
+                            00:03:19
+                        </p>
+                    </div>
+                </div> -->
+            </div>
+            <div class="list-div">
+                <!-- <p>播放清單</p>
+                <div class="list">
+                    <div class="image">
+                        <img src="http://i.ytimg.com/vi/8DVUlVUwhIw/default.jpg" alt="">
+                    </div>
+                    <div class="information">
+                        <h3>Feel The Fire (Egzod Remix) - ye. & Pluto ♪ || 2021抖音合集 | 抖音BGM | Douyin Music | 抖音 | TikTok</h3>
+                        <p>Kain Sound</p>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </main>
+    <div class="now-song">
+        <div class="image">
+            <img id="nowImage" src="/static/cool.png" alt="">
+        </div>
+        <div class="functions">
+            <div class="bar">
+                <div class="fill"></div>
+            </div>
+            <div class="function">
+                <i id="previous" class="fas fa-backward"></i>
+                <div class="play-pause">
+                    <i id="pause" class="fas fa-pause"></i>
+                    <!-- <i class="fas fa-play"></i> -->
+                </div>
+                <i id="next" class="fas fa-forward"></i>
+            </div>
+            <div class="volume">
+                <input class="range" type="range" min="0" max="100" value="100">
+            </div>
+        </div>
+    </div>
+    <script>
+        let url = '/';
+        let addSong_input = document.getElementById('addSong');
+        let search_btn = document.getElementById('search-btn');
+
+        let slow = document.getElementById('slow');
+        let previous = document.getElementById('previous');
+        let next = document.getElementById('next');
+        let pause = document.getElementById('pause');
+        let pauseStatus = "first";
+        let fast = document.getElementById('fast');
+        let volume = document.querySelector('input[type="range"]');
+        console.log(volume);
+        // 進度條
+        let fill = document.querySelector('.fill');
+        let nowImage = document.getElementById('nowImage');
+        let nowId = "first";
+
+
+        function changePlayPause(status){
+            let PlayPause = document.querySelector('.play-pause');
+            if(status){
+                PlayPause.innerHTML = '<i id="pause" onclick="changeStatus()" class="fas fa-pause"></i>';
+            }else {
+                PlayPause.innerHTML = '<i id="pause" onclick="changeStatus()" class="fas fa-play"></i>';
+            }
+        }
+        
+        function changeStatus(){
+            fetch(`${url}pause`)
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => {
+            })
+        }
+
+        function playOneSong(id){
+            fetch(`${url}play?id=${id}`)
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => {
+            })
+        }
+
+        function addSong(){
+            if(addSong_input.value != ''){
+                console.log(addSong_input.value);
+                let keyword = addSong_input.value;
+                addSong_input.value = ''
+                fetch(`${url}addSong?string=${keyword}`)
+                .then(response => response.json())
+                .catch(error => console.error('Error:', error))
+                .then(response => {
+                    let search_result = document.querySelector('.search-result');
+                    search_result.innerHTML = `
+                    <p>搜尋結果</p>
+                    <div class="song-result">
+                        <div class="image">
+                            <img src="${ response.img }" alt="">
+                        </div>
+                        <div class="information">
+                            <div class="name-author">
+                                <h2>${ response.title }</h2>
+                            </div>
+                            <p class="introduce">${response.description}</p>
+                            <p>
+                                <strong>Author:</strong>
+                                ${ response.author }
+                            </p>
+                            <p>
+                                <strong>Duration:</strong>
+                                ${ response.duration }
+                            </p>
+                        </div>
+                    </div>`;
+
+                    // get play list
+                    getList();
+                });
+            }
+        }
+
+        function getList(){
+            fetch(`${url}playlist`)
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => {
+                let list_div = document.querySelector('.list-div');
+                list_div.innerHTML = '<p>播放清單</p>';
+                response.forEach(element => {
+                    list_div.innerHTML += `
+                    <div id="song${element.id}" class="list" onclick="playOneSong(${element.id})">
+                        <div class="image">
+                            <img src="${ element.img }" alt="">
+                        </div>
+                        <div class="information">
+                            <h3>${ element.title }</h3>
+                            <p>${ element.author }</p>
+                        </div>
+                    </div>`;
+                });
+            })
+        }
+
+        function getNow(){
+            id = setInterval(function(){
+                fetch(`${url}now`)
+                .then(response => response.json())
+                .catch(error => console.error('Error:', error))
+                .then(response => {
+                    let total_time = 0;
+                    let total_time_array = response.duration;
+                    total_time_array = total_time_array.split(":");
+                    total_time_array.forEach((element, index) => {
+                        if(index == 0){
+                            total_time += Number(element) * 3600;
+                        }else if(index == 1){
+                            total_time += Number(element) * 60;
+                        }else {
+                            total_time += Number(element);
+                        }
+                    });
+                    let time = response.time;
+                    fill.style = `width:${(time / total_time) * 100}%;`;
+                    if(response.volume != -1){
+                        volume.min = 0;
+                        volume.max = 100;
+                        volume.value = String(response.volume);
+                        console.log( response.volume);
+                    }
+                    if(pauseStatus == 'first'){
+                        pauseStatus = response.status;
+                        changePlayPause(pauseStatus);
+                    }else if(response.status != pauseStatus){         
+                        pauseStatus = response.status;
+                        changePlayPause(pauseStatus);
+                    }
+                    if(response.img != nowImage.src){
+                        nowImage.src = response.img
+                    }
+                    if(nowId == 'first'){
+                        nowId = response.id;
+                        console.log(`song${nowId}`);
+                        document.getElementById(`song${nowId}`).style = 'background-color: rgb(212, 212, 212);'
+                    }else if(response.id != nowId){                        
+                        document.getElementById(`song${nowId}`).style = '';
+                        nowId = response.id;
+                        console.log(`song${nowId}`);
+                        document.getElementById(`song${nowId}`).style = 'background-color: rgb(212, 212, 212);'
+                    }
+                })
+            }, 500);
+        }
+
+        search_btn.addEventListener('click', addSong)
+        addSong_input.addEventListener('keyup', function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                addSong()
+            }
+        });
+
+        previous.addEventListener('click', function(){
+            fetch(`${url}previous`)
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => {
+            })
+        })
+        next.addEventListener('click', function(){
+            fetch(`${url}next`)
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => {
+            })
+        })
+
+        volume.addEventListener('change', function(){
+            fetch(`${url}volume?volume=${this.value}`)
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => {
+            })
+        })
+        window.onload = getList;
+
+        
+        getNow();
+    </script>
 </body>
 </html>
