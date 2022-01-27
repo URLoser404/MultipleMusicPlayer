@@ -1,12 +1,13 @@
-# Multiple music player
+# Shitty JukeBox
 
 ## Introduction
 
-多人音樂撥放器
-
-在多人空間架設後可以在區域網進行點歌
-
 ## Installation
+
+- download [vlc](https://www.videolan.org/)
+- download [python 3.9.9](https://www.python.org/downloads/release/python-399/)
+
+and install libraries
 ```
 pip install requests
 pip install bs4
@@ -17,18 +18,9 @@ pip install sqlite3
 pip install flask
 pip install flask-cors
 ```
+or click the install script:
 
-- download vlc
-https://www.videolan.org/
-- download python 3.9.9
-https://www.python.org/downloads/release/python-399/
+- Linux - setup.sh
+- Windows - setup.bat
 
 
-Linux
-```
-./setup.sh
-```
-Windows
-```
-./setup.bat
-```
