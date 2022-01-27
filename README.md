@@ -1,4 +1,4 @@
-# Multiple music player
+# Shitty JukeBox
 
 ## Introduction
 
