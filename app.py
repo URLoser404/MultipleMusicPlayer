@@ -57,7 +57,8 @@ def addSong():
 def play():
     id = request.args.get('id')
     conn = connect('music.db')
-    conn.execute(f"update playlist set played = True where id <  {id}")
+    conn.execute(f"update playlist set played = True where id < {id}")
+    conn.commit()
     conn.execute(f"update playlist set played = False where id >= {id}")
     conn.commit()
     player.stop()

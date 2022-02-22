@@ -1,3 +1,7 @@
+winget install -e --id VideoLAN.VLC
+winget install -e --id Python.Python.3
+winget install --id Git.Git -e --source winget
+
 pip install requests
 pip install bs4
 pip install git+https://github.com/Cupcakus/pafy

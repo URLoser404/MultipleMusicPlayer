@@ -1,11 +1,15 @@
-pip install requests
-pip install bs4
-pip install git+https://github.com/Cupcakus/pafy
-pip install youtube-dl
-pip install python-vlc
-pip install sqlite3
-pip install flask
-pip install flask-cors
+sudo apt install python3
+sudo apt install python3-pip
+sudo apt install git
 
-python execDB.py
-python app.py
+pip3 install requests
+pip3 install bs4
+pip3 install git+https://github.com/Cupcakus/pafy
+pip3 install youtube-dl
+pip3 install python-vlc
+pip3 install sqlite3
+pip3 install flask
+pip3 install flask-cors
+
+python3 execDB.py
+python3 app.py
