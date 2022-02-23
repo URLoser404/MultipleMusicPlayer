@@ -11,5 +11,6 @@ pip3 install python-vlc
 pip3 install sqlite3
 pip3 install flask
 pip3 install flask-cors
+pip3 install termcolor
 
 python3 app.py

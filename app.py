@@ -1,3 +1,4 @@
+from types import NoneType
 import flask
 import logging
 from flask_cors import CORS
@@ -15,7 +16,7 @@ player = Instance.media_player_new()
 
 from sqlite3 import *
 import search
-
+from termcolor import colored
 
 
 @app.route('/')
@@ -32,6 +33,10 @@ def addSong():
     else:
         video = search.string_search(string)
 
+    if video.getbestaudio() == None:
+        audio = video.getbest().url
+    else:
+        audio = video.getbestaudio().url
 
     conn = connect('music.db')
     conn.execute(f'''insert into playlist(title,author,duration,url,img,music,played) values(
@@ -40,7 +45,7 @@ def addSong():
                     '{video.duration}',
                     '{video.watchv_url}',
                     '{video.thumb}',
-                    '{video.getbestaudio().url}',
+                    '{audio}',
                     False
                 )''')
     conn.commit()
@@ -152,7 +157,7 @@ if __name__ == '__main__':
         if len(playlist) != 0:
             current = playlist[0]
             
-            print(f"now playing : {current['title']}")
+            print(f"{colored('now playing', 'green')} : {colored(current['title'],'yellow')}")
 
             Media = Instance.media_new(current['music'])
             Media.get_mrl()
