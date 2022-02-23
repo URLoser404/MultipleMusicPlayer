@@ -6,7 +6,7 @@ from sqlite3 import *
 
 import search
 
-current = None
+current = {}
 
 import vlc
 
@@ -129,6 +129,9 @@ server = Thread(target=run)
 
 if __name__ == '__main__':
     
+    import execDB 
+    execDB.main()
+
     server.start()
     while True:
 
@@ -146,7 +149,6 @@ if __name__ == '__main__':
         playlist = cursor.fetchall()
         if len(playlist) != 0:
             current = playlist[0]
-            print(current)
             
             Media = Instance.media_new(current['music'])
             Media.get_mrl()

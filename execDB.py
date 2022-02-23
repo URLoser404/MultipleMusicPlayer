@@ -38,7 +38,5 @@ def exec(command):
 
 
 if __name__ == "__main__":
-    conn = connect('music.db')
-    conn.execute("delete from playlist")
-    print(exec("select * from playlist"))
+    main()
 

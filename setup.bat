@@ -11,5 +11,4 @@ pip install sqlite3
 pip install flask
 pip install flask-cors
 
-python execDB.py
 python app.py
