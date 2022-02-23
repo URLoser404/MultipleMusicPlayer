@@ -1,30 +1,31 @@
-from flask import *
+import flask
+import logging
 from flask_cors import CORS
 from threading import Thread
-
-from sqlite3 import *
-
-import search
-
+app = flask.Flask(__name__)
+CORS(app)
+log = logging.getLogger('werkzeug')
+log.disabled = True
 current = {}
 
 import vlc
-
 Instance = vlc.Instance()
 player = Instance.media_player_new()
 
-app = Flask(__name__)
-CORS(app)
+
+from sqlite3 import *
+import search
+
 
 
 @app.route('/')
 def main():
-    return render_template('index.html')
+    return flask.render_template('index.html')
 
 
 @app.route('/addSong' , methods=['POST','GET'])
 def addSong():
-    string = request.args.get('string')
+    string = flask.request.args.get('string')
 
     if string.startswith("https://www.youtube.com") :
         video = search.url_search(string)
@@ -55,14 +56,14 @@ def addSong():
 
 @app.route('/play',methods=['POST','GET'])
 def play():
-    id = request.args.get('id')
+    id = flask.request.args.get('id')
     conn = connect('music.db')
     conn.execute(f"update playlist set played = True where id < {id}")
     conn.commit()
     conn.execute(f"update playlist set played = False where id >= {id}")
     conn.commit()
     player.stop()
-    return redirect('/now')
+    return flask.redirect('/now')
     
 @app.route('/playlist', methods=['POST','GET'])
 def playlist():
@@ -75,7 +76,7 @@ def playlist():
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     cursor.execute('select * from playlist')
-    return jsonify(cursor.fetchall())
+    return flask.jsonify(cursor.fetchall())
 
 
 status = True
@@ -102,28 +103,28 @@ def now():
 @app.route('/next',methods=['POST','GET'])
 def next():
     player.stop()
-    return redirect('/now')
+    return flask.redirect('/now')
 @app.route('/previous', methods=['POST','GET'])
 def previous():
     conn = connect('music.db')
     conn.execute(f"update playlist set played = False where id >= {current['id']-1}")
     conn.commit()
     player.stop()
-    return redirect('/now')
+    return flask.redirect('/now')
 @app.route('/volume' , methods=['POST','GET'])
 def volume():
-    volume = request.args.get("volume")
+    volume = flask.request.args.get("volume")
     player.audio_set_volume(int(volume))
-    return redirect('/now')
+    return flask.redirect('/now')
 @app.route('/rate' , methods=['POST','GET'])
 def rate():
-    rate = request.args.get("rate")
+    rate = flask.request.args.get("rate")
     player.set_rate(float(rate))
-    return redirect('/now')
+    return flask.redirect('/now')
 
 def run():
     app.run(host='0.0.0.0', port=8080)
-
+    
 
 server = Thread(target=run)
 
@@ -133,6 +134,7 @@ if __name__ == '__main__':
     execDB.main()
 
     server.start()
+
     while True:
 
         conn = connect('music.db')
@@ -150,6 +152,8 @@ if __name__ == '__main__':
         if len(playlist) != 0:
             current = playlist[0]
             
+            print(f"now playing : {current['title']}")
+
             Media = Instance.media_new(current['music'])
             Media.get_mrl()
             player.set_media(Media)
@@ -160,8 +164,6 @@ if __name__ == '__main__':
 
             current_state = player.get_state()
             while current_state != 5 and current_state != 6:
-                current_state = player.get_state() 
-        else:
-            print("no song")
-            import time
-            time.sleep(1)
+                current_state = player.get_state()
+        import time
+        time.sleep(1) 

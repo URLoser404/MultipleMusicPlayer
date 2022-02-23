@@ -4,8 +4,9 @@ winget install --id Git.Git -e --source winget
 
 pip install requests
 pip install bs4
-pip install git+https://github.com/Cupcakus/pafy
 pip install youtube-dl
+pip install git+https://github.com/Cupcakus/pafy
+
 pip install python-vlc
 pip install sqlite3
 pip install flask
