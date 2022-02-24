@@ -1,4 +1,3 @@
-from types import NoneType
 import flask
 import logging
 from flask_cors import CORS
@@ -28,8 +27,11 @@ def main():
 def addSong():
     string = flask.request.args.get('string')
 
-    if string.startswith("https://www.youtube.com") :
-        video = search.url_search(string)
+    if string.startswith("https://"):
+        try:
+            video = search.url_search(string)
+        except:
+            video = search.string_search(string)
     else:
         video = search.string_search(string)
 
