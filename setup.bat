@@ -7,7 +7,7 @@ pip install bs4
 pip install youtube-dl
 pip install git+https://github.com/Cupcakus/pafy
 pip install python-vlc
-pip install sqlite3
+pip install pysqlite3
 pip install flask
 pip install flask-cors
 
