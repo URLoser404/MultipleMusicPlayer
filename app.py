@@ -1,27 +1,27 @@
-import flask
-import logging
-from flask_cors import CORS
 from threading import Thread
-app = flask.Flask(__name__)
-CORS(app)
-log = logging.getLogger('werkzeug')
-log.disabled = True
-current = {}
-
-import vlc
-Instance = vlc.Instance()
-player = Instance.media_player_new()
-
-
-from sqlite3 import *
+import logging
 import search
+import flask
+from flask_cors import CORS
+import vlc
+from sqlite3 import *
 from termcolor import colored
 
+
+app = flask.Flask(__name__)
+CORS(app)
+
+log = logging.getLogger('werkzeug')
+log.disabled = True
+
+current = {}
+
+Instance = vlc.Instance()
+player = Instance.media_player_new()
 
 @app.route('/')
 def main():
     return flask.render_template('index.html')
-
 
 @app.route('/addSong' , methods=['POST','GET'])
 def addSong():
@@ -107,10 +107,12 @@ def now():
     current['rate'] = player.get_rate()
     current['status'] = status
     return current
+
 @app.route('/next',methods=['POST','GET'])
 def next():
     player.stop()
     return flask.redirect('/now')
+
 @app.route('/previous', methods=['POST','GET'])
 def previous():
     conn = connect('music.db')
@@ -118,11 +120,13 @@ def previous():
     conn.commit()
     player.stop()
     return flask.redirect('/now')
+
 @app.route('/volume' , methods=['POST','GET'])
 def volume():
     volume = flask.request.args.get("volume")
     player.audio_set_volume(int(volume))
     return flask.redirect('/now')
+
 @app.route('/rate' , methods=['POST','GET'])
 def rate():
     rate = flask.request.args.get("rate")
@@ -150,6 +154,7 @@ if __name__ == '__main__':
             for idx, col in enumerate(cursor.description):
                 dict[col[0]] = row[idx]
             return dict
+        
         conn.row_factory = dict_factory
         cursor = conn.cursor()
         cursor.execute("select * from playlist where played = False")
