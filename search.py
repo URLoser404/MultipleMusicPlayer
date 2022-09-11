@@ -34,11 +34,10 @@ def play(url):
 
 
 if __name__ == "__main__":
-    video = string_search('pocats studio')
-    play(video.getbestaudio().url)
+    video = url_search("https://www.youtube.com/watch?v=a7t62tOIhvE")
+    import pprint
+    print(video.getbestvideo().url)
 
-    while True:
-        pass
 
 
 
